@@ -7,4 +7,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  # config/routes.rb
+  namespace :api do
+    namespace :v1 do
+      resources :text_embeddings, only: [:create]
+      post 'query/ask', to: 'query#ask'
+    end
+  end
 end

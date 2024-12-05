@@ -10,12 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_01_152727) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_02_132512) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
 
-# Could not dump table "text_embeddings" because of following StandardError
-#   Unknown type 'vector(1536)' for column 'embedding'
+  create_table "text_embeddings", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.vector "embedding", limit: 1536
+    t.string "course_name"
+    t.text "course_description"
+    t.string "course_category"
+  end
 
 end
