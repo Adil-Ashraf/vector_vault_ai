@@ -32,9 +32,11 @@ class Api::V1::QueryController < ApplicationController
         PROMPT
 
         answer = service.generate_answer(prompt)
-        render json: { 
+        render json: {
+          title: closest_result.title,
+          url: closest_result.url,
           answer: answer, 
-          context: closest_result.content 
+          context: closest_result.content,
         }, status: :ok
       else
         render json: { message: "No relevant context found." }, status: :not_found

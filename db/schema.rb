@@ -20,9 +20,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_02_132512) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.vector "embedding", limit: 1536
-    t.string "course_name"
-    t.text "course_description"
-    t.string "course_category"
+    t.string "title"
+    t.string "url"
+    t.text "full_content"
   end
 
 end
