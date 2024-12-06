@@ -13,7 +13,6 @@ class Api::V1::QueryController < ApplicationController
       if nearest_neighbors.any?
         closest_result = nearest_neighbors.first
 
-        # Construct improved prompt
         prompt = <<~PROMPT
           You are an intelligent assistant helping users answer questions based on the provided content.
 

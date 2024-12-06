@@ -5,22 +5,16 @@ class AiService
     @client = OpenAI::Client.new(access_token: api_key)
   end
 
-  def split_text_into_chunks(text, chunk_size = 500, overlap_size = 100)
-    words = text.split(' ')
-    chunks = []
-    start_index = 0
-  
-    while start_index < words.length
-      # Create the chunk with overlap
-      end_index = [start_index + chunk_size, words.length].min
-      chunk = words[start_index...end_index].join(' ')
-      chunks << chunk
-  
-      # Advance the start index but include overlap
-      start_index += chunk_size - overlap_size
-    end
-  
-    chunks
+  def split_text_into_chunks(text, chunk_size = 2500, overlap_size = 500)
+    # Configure Baran RecursiveCharacterTextSplitter
+    splitter = Baran::RecursiveCharacterTextSplitter.new(
+      chunk_size: chunk_size,
+      chunk_overlap: overlap_size,
+      separators: ["\n\n", "\n", "."]
+    )
+
+    # Split the text and return only the text chunks
+    splitter.chunks(text).map { |chunk| chunk[:text] }
   end
 
   def generate_embedding(text)

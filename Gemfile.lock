@@ -78,6 +78,7 @@ GEM
       mutex_m
       securerandom (>= 0.3)
       tzinfo (~> 2.0)
+    baran (0.1.12)
     base64 (0.2.0)
     benchmark (0.4.0)
     bigdecimal (3.1.8)
@@ -226,6 +227,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  baran (~> 0.1.11)
   bootsnap
   debug
   dotenv-rails
