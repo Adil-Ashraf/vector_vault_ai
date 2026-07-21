@@ -7,21 +7,17 @@ class Api::V1::TextEmbeddingsController < ApplicationController
     url = params[:url]
     content = params[:content]
 
-    # Split content into chunks and generate embeddings
-    embeddings = []
-    service.split_text_into_chunks(content).each do |chunk|
-      embedding = service.generate_embedding(chunk)
-      embeddings << TextEmbedding.create!(
-        title: title,
-        url: url,
-        content: chunk,
-        embedding: embedding
-      )
+    chunks = service.split_text_into_chunks(content)
+    chunk_embeddings = service.generate_embeddings(chunks)
+
+    records = chunks.zip(chunk_embeddings).map do |chunk, embedding|
+      TextEmbedding.create!(title: title, url: url, content: chunk, embedding: embedding)
     end
 
-    render json: { message: "#{embeddings.size} chunks embedded successfully." }, status: :created
-  rescue => e
-    render json: { error: e.message }, status: :unprocessable_entity
+    render json: { message: "#{records.size} chunks embedded successfully." }, status: :created
+  rescue StandardError => e
+    Rails.logger.error("TextEmbeddingsController#create failed: #{e.class}: #{e.message}")
+    render json: { error: "Failed to process embeddings. Please try again later." }, status: :unprocessable_entity
   end
 
   private

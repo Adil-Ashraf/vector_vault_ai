@@ -9,6 +9,7 @@ class Api::V1::QueryController < ApplicationController
 
     render json: result, status: :ok
   rescue StandardError => e
-    render json: { error: "An unexpected error occurred: #{e.message}" }, status: :internal_server_error
+    Rails.logger.error("QueryController#ask failed: #{e.class}: #{e.message}")
+    render json: { error: "An unexpected error occurred. Please try again later." }, status: :internal_server_error
   end
 end
