@@ -1,0 +1,20 @@
+# syntax = docker/dockerfile:1
+# Dev/CI image: installs all gem groups (including test) and runs from source
+# via a bind mount, unlike the production Dockerfile which is a lean multi-stage build.
+ARG RUBY_VERSION=3.3.1
+FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim
+
+WORKDIR /rails
+
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config curl && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY . .
+
+EXPOSE 3000
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"]

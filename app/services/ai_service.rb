@@ -17,14 +17,23 @@ class AiService
     splitter.chunks(text).map { |chunk| chunk[:text] }
   end
 
+  EMBEDDING_MODEL = 'text-embedding-3-small'.freeze
+
   def generate_embedding(text)
+    generate_embeddings([text]).first
+  end
+
+  # Batches all inputs into a single OpenAI request instead of one call per chunk.
+  def generate_embeddings(texts)
+    return [] if texts.empty?
+
     response = @client.embeddings(
       parameters: {
-        model: 'text-embedding-ada-002',
-        input: text
+        model: EMBEDDING_MODEL,
+        input: texts
       }
     )
-    response['data'][0]['embedding']
+    response['data'].sort_by { |datum| datum['index'] }.map { |datum| datum['embedding'] }
   end
 
   def generate_answer(prompt)
